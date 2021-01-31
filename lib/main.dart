@@ -112,7 +112,7 @@ class ApiZ {
   static Future<OpenWeather> getOpenWeatherResponseData(
       Position lastPosition) async {
     final response = await http.get(
-        'http://api.openweathermap.org/data/2.5/weather?lat=${lastPosition.latitude}&lon=${lastPosition.longitude}&appid=99fee0960854258aa2a30ecd59660ee2');
+        'http://api.openweathermap.org/data/2.5/weather?lat=${lastPosition.latitude}&lon=${lastPosition.longitude}&appid=YOUR API KEY');
     if (response.statusCode == 200) {
       var body = json.decode(response.body);
 
