@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sun_set_rise_api/WeatherWidget.dart';
-import 'package:flutter_sun_set_rise_api/open_weather.dart';
+import 'package:open_weather_client/open_weather.dart';
+
+// import 'package:flutter_sun_set_rise_api/open_weather.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -34,7 +36,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   Position lastPosition;
 
-  OpenWeather _openWeather;
+  // OpenWeather _openWeather;
+
+  OpenWeather openWeather = OpenWeather(
+    apiKey: '8ddca1552d6734002911a584cc9c9f96',
+  );
+
+  WeatherData _weatherData;
 
   @override
   void initState() {
@@ -67,7 +75,6 @@ class _MyHomePageState extends State<MyHomePage> {
             'Location permissions are denied (actual value: $permission).');
       }
     }
-
     getCurrentLocation();
   }
 
@@ -79,9 +86,22 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void loadData() async {
-    await ApiZ.getOpenWeatherResponseData(lastPosition).then((value) {
+    // await ApiZ.getOpenWeatherResponseData(lastPosition).then((value) {
+    //   setState(() {
+    //      _openWeather = value;
+    //   });
+    // });
+    await openWeather
+        .currentWeatherByLocation(
+      latitude: lastPosition.latitude,
+      longitude: lastPosition.longitude,
+      weatherUnits: WeatherUnits.METRIC,
+    )
+        .then((value) {
       setState(() {
-        _openWeather = value;
+        _weatherData = value;
+        print(lastPosition.latitude);
+        print(lastPosition.longitude);
       });
     });
   }
@@ -93,10 +113,13 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text('Flutter Weather App'),
       ),
       body: Container(
-        child: WeatherWidget(
-          size: Size.infinite,
-          weather: 'Snowy',
-          snowConfig: SnowConfig(snowNum: 100),
+        child: Column(
+          children: [
+            Text(
+              '${getDateTime(_weatherData.date ?? 0)}\n${_weatherData.details[0].weatherShortDescription}\n${_weatherData.temperature.currentTemperature}\n${_weatherData.wind.deg}',
+              style: TextStyle(fontSize: 24),
+            ),
+          ],
         ),
       ),
     );
@@ -117,13 +140,20 @@ Center(
           ],
         ),
       )
+
+      WeatherWidget(
+          size: Size.infinite,
+          weather: 'Snowy',
+          snowConfig: SnowConfig(snowNum: 100),
+        ),
  */
 
-class ApiZ {
+/*class ApiZ {
   static Future<OpenWeather> getOpenWeatherResponseData(
       Position lastPosition) async {
     final response = await http.get(
-        'http://api.openweathermap.org/data/2.5/weather?lat=${lastPosition.latitude}&lon=${lastPosition.longitude}&appid=8ddca1552d6734002911a584cc9c9f96');
+        'http://api.openweathermap.org/data/2.5/weather?lat=${lastPosition.latitude}&lon=${lastPosition.longitude}&units=metric&appid=8ddca1552d6734002911a584cc9c9f96');
+        'https://api.openweathermap.org/data/2.5/weather?lat=24.4848948&lon=$91.7818702&units=metric&appid=8ddca1552d6734002911a584cc9c9f96');
     if (response.statusCode == 200) {
       var body = json.decode(response.body);
 
@@ -134,4 +164,4 @@ class ApiZ {
       throw Exception();
     }
   }
-}
+}*/
