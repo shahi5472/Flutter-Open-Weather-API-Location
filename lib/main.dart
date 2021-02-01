@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sun_set_rise_api/WeatherWidget.dart';
 import 'package:flutter_sun_set_rise_api/open_weather.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
@@ -91,7 +92,19 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text('Flutter Weather App'),
       ),
-      body: Center(
+      body: Container(
+        child: WeatherWidget(
+          size: Size.infinite,
+          weather: 'Snowy',
+          snowConfig: SnowConfig(snowNum: 100),
+        ),
+      ),
+    );
+  }
+}
+
+/*
+Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -103,10 +116,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
+      )
+ */
 
 class ApiZ {
   static Future<OpenWeather> getOpenWeatherResponseData(
